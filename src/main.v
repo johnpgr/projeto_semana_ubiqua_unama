@@ -3,6 +3,9 @@ module main
 import x.vweb
 import x.sessions
 import x.sessions.vweb2_middleware
+import os
+
+const secret = os.getenv_opt('AUTH_SECRET') or { panic('AUTH_SECRET NOT SET') }
 
 fn main() {
 	println('Hello World!')
@@ -12,8 +15,11 @@ fn main() {
 
 	mut app := &App{
 		sessions: &sessions.Sessions[User]{
-			secret: 'my_secret'.bytes()
+			secret: secret.bytes()
 			store: store
+			cookie_options: sessions.CookieOptions{
+				secure: true
+			}
 		}
 	}
 
